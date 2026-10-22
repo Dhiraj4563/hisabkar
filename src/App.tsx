@@ -171,6 +171,7 @@ export default function App() {
             ownerName={financial.settings?.ownerName}
             ownerProfileImage={financial.settings?.ownerProfileImage}
             onOpenProfile={() => setIsProfileModalOpen(true)}
+            onNavigateSettings={() => handleNavigate('settings')}
           />
 
           {/* Page Routing */}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { DateFilterType } from '../../hooks/useFinancialData';
-import { Search, Eye, EyeOff, Plus, User, Camera } from 'lucide-react';
+import { Search, Eye, EyeOff, Plus, User, Camera, Settings } from 'lucide-react';
 import { Button } from '../ui/Button';
 
 interface HeaderProps {
@@ -16,6 +16,7 @@ interface HeaderProps {
   ownerName?: string;
   ownerProfileImage?: string;
   onOpenProfile?: () => void;
+  onNavigateSettings?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -31,6 +32,7 @@ export const Header: React.FC<HeaderProps> = ({
   ownerName,
   ownerProfileImage,
   onOpenProfile,
+  onNavigateSettings,
 }) => {
   const filterOptions: { id: DateFilterType; label: string }[] = [
     { id: 'today', label: 'Today' },
@@ -122,6 +124,18 @@ export const Header: React.FC<HeaderProps> = ({
         >
           {hideBalances ? <EyeOff className="w-4 h-4 text-amber-400" /> : <Eye className="w-4 h-4" />}
         </button>
+
+        {/* Settings button */}
+        {onNavigateSettings && (
+          <button
+            onClick={onNavigateSettings}
+            className="p-1.5 sm:p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:border-zinc-700 transition-colors cursor-pointer shrink-0"
+            title="Settings & Security"
+            aria-label="Settings"
+          >
+            <Settings className="w-4 h-4" />
+          </button>
+        )}
 
         {/* Quick Add Button */}
         <Button
