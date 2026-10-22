@@ -1,0 +1,936 @@
+# PROJECT: HISABMATE — PERSONAL FINANCE & GROUP EXPENSE TRACKER
+
+Act as a senior full-stack developer, financial software architect, UI/UX designer, database engineer, security engineer, and QA tester.
+
+Build a complete, production-minded, installable personal finance and group expense management application called **HisabMate**.
+
+Do not create only a landing page or static dashboard. Build a fully functional application with working forms, calculations, persistent data storage, charts, filters, navigation, financial ledger logic, group settlements, and export/import capabilities.
+
+If the environment supports creating and editing project files, create the complete runnable project directly. Do not merely describe the code or give pseudocode.
+
+---
+
+# 1. PROJECT OBJECTIVE
+
+Create an application that allows a person to manage all personal financial records in one place.
+
+The application must answer these questions:
+
+1. How much money have I borrowed from each person?
+2. How much money have I lent to each person?
+3. How much money do other people owe me?
+4. How much money do I owe other people?
+5. How much have I earned?
+6. How much have I spent?
+7. Where is my money going?
+8. How much money have I paid on behalf of other people?
+9. How much should each friend pay for shared expenses?
+10. Who should pay whom to settle group balances?
+11. Which payments are overdue?
+12. What is my actual cash, bank, and wallet balance?
+13. How much money can I expect to receive in the future?
+14. What is my financial position over a selected period?
+
+The app must distinguish actual money, personal expenses, receivables, liabilities, repayments, transfers, and shared expenses accurately.
+
+# 2. TECHNOLOGY STACK
+
+Use the following stack:
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Lucide React icons
+- Recharts for analytics
+- Dexie.js for IndexedDB
+- Zod for input validation
+- date-fns for date handling
+- Vite PWA plugin for installation and offline support
+- Vitest for unit testing
+- React Hook Form where appropriate
+
+Use stable, compatible package versions.
+
+Use a modular, maintainable project structure. Keep the business logic separate from the UI components.
+
+Do not introduce a backend, Firebase, Supabase, or mandatory cloud service in the initial version.
+
+The application must work offline after the first successful load.
+
+# 3. STORAGE AND PRIVACY
+
+Use device-local IndexedDB as the primary database.
+
+Requirements:
+
+- No account registration required for the offline version.
+- No mandatory internet connection for normal operation.
+- Persist data across browser restarts.
+- Cache the application shell using a service worker.
+- Support data backup and restoration.
+- Support encrypted backup files using a well-reviewed browser cryptography API.
+- Never hardcode encryption keys.
+- Never store passwords or PINs in plaintext.
+- Provide an optional application lock with PIN and biometric authentication where the platform supports it.
+- Automatically lock after a configurable inactivity period.
+- Provide a hide-balances privacy mode.
+- Allow the user to delete all local data after explicit confirmation.
+- Explain that uninstalling the PWA or clearing browser data may remove locally stored financial records.
+- Provide a clear backup reminder.
+- Do not send personal financial data to analytics services or external servers.
+
+Treat browser storage as device-local, not as guaranteed secure storage. Explain that a PWA cannot provide identical security guarantees to a dedicated native application.
+
+Implement encrypted backup and restore using authenticated encryption, such as AES-GCM, with a key derived from a user-supplied backup password using a suitable password-based key derivation function.
+
+Validate backup file versions, structure, and integrity before restoring.
+
+# 4. DESIGN SYSTEM AND UI
+
+Create a premium dark fintech design inspired by modern financial dashboards.
+
+Design characteristics:
+
+- Near-black and charcoal backgrounds.
+- Deep green accents for positive balances.
+- Red or orange for debts and overdue payments.
+- Blue and purple accents for categories and analytics.
+- Clean typography.
+- Rounded cards with subtle borders.
+- Attractive charts and transaction lists.
+- Responsive mobile-first layout.
+- Desktop sidebar navigation.
+- Mobile bottom navigation.
+- Floating Add Transaction button.
+- Clear loading, empty, error, and success states.
+- Accessible contrast and keyboard navigation.
+- Light and dark themes.
+- Smooth but restrained transitions.
+- Avoid excessive gradients, clutter, and oversized headings.
+
+Make the application look polished and usable on small mobile screens.
+
+Create a reusable design system for cards, buttons, inputs, modals, tables, badges, charts, and transaction rows.
+
+# 5. MAIN NAVIGATION
+
+Create the following screens:
+
+1. Dashboard
+2. Transactions
+3. People
+4. Lending and Borrowing
+5. Group Expenses
+6. Accounts and Wallets
+7. Budgets
+8. Recurring Transactions
+9. Financial Reports
+10. Calendar and Reminders
+11. Import and Export
+12. Settings and Security
+
+Add a global search and notification center.
+
+Make navigation functional. Every visible button must perform its intended action.
+
+# 6. DASHBOARD
+
+Create a real-time dashboard showing data calculated from the database.
+
+Include:
+
+- Total cash and account balances.
+- Total receivables: money others owe me.
+- Total liabilities: money I owe others.
+- Net financial position.
+- Total income for the selected period.
+- Total personal expenses for the selected period.
+- Total money lent.
+- Total money borrowed.
+- Outstanding receivables and payables.
+- Group settlement balances.
+- Upcoming payment deadlines.
+- Overdue debts.
+- Budget utilization.
+- Recent transactions.
+- Monthly income-versus-expense chart.
+- Expense breakdown by category.
+- Six-month spending trend.
+- Quick actions for adding an expense, income, loan, repayment, transfer, or group expense.
+
+Provide date filters for today, this week, this month, last month, this year, and custom range.
+
+Clearly distinguish net worth from cash available. Do not add receivables to cash balances.
+
+# 7. TRANSACTION MANAGEMENT
+
+Implement a complete transaction system.
+
+Transaction types:
+
+- Income
+- Personal expense
+- Money lent
+- Money borrowed
+- Loan repayment received
+- Loan repayment made
+- Account transfer
+- Group expense
+- Group settlement
+- Refund
+- Expense reimbursement
+
+Each transaction should support:
+
+- Unique ID
+- Date and time
+- Transaction type
+- Amount
+- Currency
+- Account
+- Category
+- Person, when applicable
+- Group, when applicable
+- Description
+- Notes
+- Tags
+- Attachments or receipt references
+- Created timestamp
+- Updated timestamp
+- Optional due date
+- Optional external reference
+- Transaction status
+
+Features:
+
+- Create, view, edit, search, filter, and sort transactions.
+- Filter by type, category, person, group, account, amount, and date.
+- Paginate long transaction lists.
+- Add receipt attachments.
+- Show transaction details.
+- Support refunds and corrections.
+- Maintain an audit trail.
+- Use reversal entries or controlled corrections for posted financial records.
+- Prevent duplicate transaction submissions.
+- Validate all amounts.
+- Ask for confirmation before destructive actions.
+
+Create a universal Add Transaction modal with contextual fields based on the selected transaction type.
+
+# 8. PEOPLE MANAGEMENT
+
+Create a People module.
+
+Users must be able to add people manually without needing access to their contacts.
+
+Person fields:
+
+- Person ID
+- Display name
+- Optional nickname
+- Optional phone number
+- Optional email
+- Notes
+- Tags
+- Creation date
+- Archived status
+
+Do not require contact permissions.
+
+Each person must have an individual financial ledger page displaying:
+
+- Total money lent to them.
+- Total money borrowed from them.
+- Total repayments received.
+- Total repayments made.
+- Outstanding amount they owe me.
+- Outstanding amount I owe them.
+- Expenses paid on their behalf.
+- Shared group expense balances.
+- Transaction history.
+- Upcoming due dates.
+- Overdue payments.
+
+Support partial repayments and multiple loans per person.
+
+Do not automatically offset unrelated debts with the same person. Provide an explicit, auditable debt-offset action if appropriate.
+
+Support archiving people without deleting their financial history.
+
+# 9. LENDING AND BORROWING
+
+Create a dedicated debt-management module.
+
+Lending workflow:
+
+1. Select a person.
+2. Enter the amount.
+3. Select the source account.
+4. Enter the date.
+5. Optionally set a due date.
+6. Add a description or note.
+7. Save the loan.
+8. Update cash and receivable balances.
+
+Borrowing workflow:
+
+1. Select a lender.
+2. Enter the amount received.
+3. Select the destination account.
+4. Enter the date.
+5. Optionally set a due date.
+6. Add a description.
+7. Save the loan.
+8. Update cash and liability balances.
+
+Repayment workflow:
+
+- Record partial or full repayments.
+- Select the associated loan.
+- Select the payment account.
+- Store the repayment date.
+- Update the outstanding principal.
+- Display the remaining balance.
+- Prevent repayment beyond the outstanding amount unless explicitly recorded as a separate transaction.
+
+Support multiple loans with different due dates and statuses.
+
+Statuses:
+
+- Outstanding
+- Partially repaid
+- Fully repaid
+- Overdue
+- Archived
+
+Do not count loan proceeds as income.
+
+Do not count repayment of loan principal as an expense.
+
+# 10. INCOME AND PERSONAL EXPENSES
+
+Create customizable income and expense categories.
+
+Default income categories:
+
+- Salary
+- Bonus
+- Freelance
+- Business income
+- Interest
+- Gift
+- Other income
+
+Default expense categories:
+
+- Food
+- Groceries
+- Rent
+- Utilities
+- Transport
+- Fuel
+- Travel
+- Shopping
+- Healthcare
+- Education
+- Entertainment
+- Subscriptions
+- Family
+- Personal care
+- Loan interest
+- Other expenses
+
+Allow users to create, edit, reorder, and archive categories.
+
+Features:
+
+- Optional receipt attachments.
+- Notes and tags.
+- Recurring income and expenses.
+- Category-level spending charts.
+- Merchant or payee descriptions.
+- Monthly comparisons.
+- Refund handling.
+- Expense reimbursement tracking.
+
+Separate loan principal from interest expense.
+
+Do not count transfers between the user's own accounts as income or expenses.
+
+# 11. ACCOUNTS AND WALLETS
+
+Support multiple financial accounts.
+
+Examples:
+
+- Cash
+- Bank accounts
+- Digital wallets
+- Savings accounts
+- Credit card accounts
+- Custom accounts
+
+Account fields:
+
+- Account ID
+- Name
+- Account type
+- Currency
+- Opening balance
+- Created date
+- Active status
+
+Features:
+
+- Account balance history.
+- Account-specific transaction lists.
+- Account transfers.
+- Manual balance reconciliation.
+- Credit card liability tracking.
+- Account archive functionality.
+- Account balance summary.
+
+Transfers must update both accounts atomically and must not affect income or expense totals.
+
+Handle credit card purchases and repayments correctly. A card purchase increases the card liability; paying the card bill reduces cash and the card liability without recording the same purchase as a second expense.
+
+# 12. GROUP EXPENSE MANAGEMENT
+
+Create a complete group expense splitting module.
+
+Allow users to create groups such as:
+
+- Trips
+- Roommates
+- Friends
+- Family
+- Shared rent
+- Events
+- Other custom groups
+
+Group fields:
+
+- Group ID
+- Name
+- Description
+- Group currency
+- Member list
+- Created date
+- Archived status
+
+Group members can be local person records or the current user.
+
+Each group should support:
+
+- Add and remove members while preserving historical records.
+- Add expenses.
+- Choose the person who paid.
+- Choose participating members.
+- Split equally.
+- Split using exact amounts.
+- Split using percentages.
+- Split using weighted shares.
+- Split selected items across participants.
+- Exclude nonparticipants.
+- Add expense descriptions and receipts.
+- Edit draft expenses.
+- Correct posted expenses through auditable adjustments.
+- View each member's total contributions.
+- View each member's fair share.
+- View net balances.
+- View settlement history.
+- Mark a group as settled or archived without deleting its records.
+
+Use integer minor currency units where applicable. Distribute rounding remainders deterministically so allocated shares always equal the original expense total.
+
+Validate that custom amounts sum to the expense total, percentages sum to 100%, and shares are valid.
+
+Support groups in different currencies without combining incomparable amounts directly.
+
+# 13. GROUP SETTLEMENT ALGORITHM
+
+Implement a deterministic settlement optimizer.
+
+For every group:
+
+1. Calculate each member's actual contributions.
+2. Calculate each member's assigned share.
+3. Calculate each member's net balance.
+4. Identify members who must pay and members who should receive.
+5. Generate suggested transfers that settle the net balances.
+6. Minimize the number of transfers where practical.
+7. Show each suggested payment with payer, receiver, amount, and currency.
+8. Allow users to record a settlement as paid.
+9. Update balances only when the settlement is recorded.
+10. Keep the settlement history auditable.
+
+Convention:
+
+- Positive net balance means the member should receive money.
+- Negative net balance means the member should pay money.
+- Zero means the member is settled.
+
+The sum of all net balances within a group and currency must equal zero, subject only to explicitly documented rounding rules.
+
+Use a greedy debtor-creditor matching algorithm as the default. Clearly document that it reduces unnecessary transactions but may not produce the globally minimal number of transfers for every possible balance configuration.
+
+Never double-count a group expense as a personal expense and a separate debt. Use one consistent ledger model and derive the personal and group views from it.
+
+Prevent duplicate settlement records.
+
+Do not claim a real payment occurred merely because a settlement was suggested or recorded manually.
+
+# 14. DOUBLE-ENTRY LEDGER AND ACCOUNTING INTEGRITY
+
+Implement a consistent, auditable accounting engine.
+
+Use immutable posted journal entries with balanced debit and credit lines. Draft transactions may be edited; posted transactions should be corrected using reversals or adjustments.
+
+Every posted journal entry must balance within its currency.
+
+Do not represent monetary values with unrestricted floating-point arithmetic.
+
+Use integer minor units where possible. For currencies with different minor-unit conventions, use currency metadata to determine precision.
+
+Create appropriate accounts, including:
+
+- Cash and bank assets
+- Receivables
+- Other assets
+- Personal expense categories
+- Income categories
+- Loan liabilities
+- Credit card liabilities
+- Reimbursement clearing
+- Group member receivables and payables
+- Opening balance equity
+
+Accounting examples:
+
+A. Salary received:
+- Debit cash or bank.
+- Credit salary income.
+
+B. Personal cash expense:
+- Debit the relevant expense account.
+- Credit cash or bank.
+
+C. Money lent to a friend:
+- Debit receivable from the friend.
+- Credit cash or bank.
+
+D. Money borrowed from a friend:
+- Debit cash or bank.
+- Credit loan payable.
+
+E. Repayment received on a loan:
+- Debit cash or bank.
+- Credit the relevant receivable.
+
+F. Loan principal repaid:
+- Debit loan payable.
+- Credit cash or bank.
+
+G. Transfer between own accounts:
+- Debit destination account.
+- Credit source account.
+
+H. Credit card purchase:
+- Debit the expense category.
+- Credit credit card liability.
+
+I. Credit card payment:
+- Debit credit card liability.
+- Credit cash or bank.
+
+J. Shared expense paid entirely by the user:
+- Debit the user's own expense share.
+- Debit receivables from other participants for their assigned shares.
+- Credit cash or bank for the total amount paid.
+
+K. Shared expense paid by another member:
+- Record the user's assigned share and the corresponding amount owed to or by that member using a consistent group ledger model.
+
+Use a single source of truth for posted financial records. Derive balances from the ledger or maintain transactional projections that can be reconciled to it.
+
+Implement database transactions so related journal entries, transaction metadata, loan balances, and settlement records cannot be partially saved.
+
+Implement integrity checks for:
+- Unbalanced journal entries.
+- Negative or impossible loan balances.
+- Duplicate postings.
+- Invalid currencies.
+- Invalid split totals.
+- Incorrect settlement totals.
+- Account balance discrepancies.
+
+# 15. MULTI-CURRENCY SUPPORT
+
+Support INR, NPR, USD, EUR, GBP, and configurable additional currencies.
+
+Requirements:
+
+- Each account has a currency.
+- Each transaction retains its original currency and amount.
+- Store the exchange rate used at the time of conversion.
+- Store the reporting-currency amount where applicable.
+- Support manual exchange-rate entry.
+- Display original and converted amounts.
+- Let the user choose a default reporting currency.
+- Support mixed-currency reports without adding incompatible currencies directly.
+- Preserve historical exchange rates for previously recorded transactions.
+- Handle currency precision correctly.
+
+Do not require an online exchange-rate API.
+
+If live exchange rates are added in the future, make them optional and disclose their source and timestamp.
+
+# 16. BUDGETING AND SAVINGS
+
+Implement:
+
+- Monthly budgets.
+- Category-specific budgets.
+- Budget alerts.
+- Budget utilization percentages.
+- Savings goals.
+- Goal targets and deadlines.
+- Goal progress.
+- Spending limits.
+- Budget rollover settings.
+- Comparison between actual spending and planned spending.
+
+Calculate budget usage from actual qualifying expenses and refunds. Exclude loan principal repayments and internal account transfers.
+
+Do not treat the same group expense share and group payment as two personal expenses.
+
+# 17. RECURRING TRANSACTIONS
+
+Support recurring:
+
+- Salary
+- Rent
+- Subscriptions
+- Utility bills
+- Loan repayments
+- Regular savings contributions
+- Other income and expenses
+
+Allow users to configure:
+
+- Frequency
+- Start date
+- Optional end date
+- Next occurrence
+- Reminder timing
+- Active or paused status
+
+Do not create duplicate transactions if the user opens the application multiple times.
+
+Because this is an offline PWA, explain that scheduled processing and notifications may depend on whether the app is running and browser capabilities. Provide in-app reminders and best-effort notifications.
+
+# 18. CALENDAR AND REMINDERS
+
+Create a calendar view with:
+
+- Upcoming loan repayments.
+- Money expected from others.
+- Money owed to others.
+- Recurring bills.
+- Budget review reminders.
+- Upcoming group settlements.
+
+Allow reminders to be dismissed or rescheduled.
+
+Display overdue amounts and days overdue.
+
+Do not automatically charge, transfer, or collect money.
+
+# 19. RECEIPTS AND ATTACHMENTS
+
+Allow receipt images and supporting documents to be attached to transactions.
+
+Requirements:
+
+- Validate file types and sizes.
+- Store files locally.
+- Use thumbnails for images.
+- Provide previews.
+- Allow removing attachments through controlled transaction correction.
+- Avoid embedding large files directly in every transaction export.
+- Include an optional attachments folder or archive in encrypted backups.
+- Warn users that attachments increase local storage usage.
+
+# 20. REPORTS AND ANALYTICS
+
+Implement reports for:
+
+- Income versus expenses.
+- Monthly cash flow.
+- Spending by category.
+- Spending by account.
+- Outstanding loans.
+- Money lent versus money borrowed.
+- Receivables aging.
+- Payables aging.
+- Group expense summaries.
+- Group settlements.
+- Budget performance.
+- Savings goals.
+- Account balance history.
+- Net financial position.
+
+Provide date filters, currency filters, category filters, and downloadable summaries.
+
+Clearly label cash balances, net worth, receivables, liabilities, and expense totals so they are not confused.
+
+# 21. IMPORT, EXPORT, BACKUP, AND RESTORE
+
+Implement:
+
+- CSV export for transactions.
+- CSV export for people and outstanding balances.
+- Group expense exports.
+- PDF financial statements where supported.
+- JSON backup.
+- Encrypted backup.
+- Restore from backup.
+- CSV import with column mapping.
+- Import preview.
+- Duplicate detection.
+- Validation before importing.
+- Error report for rejected rows.
+- Full backup integrity checks.
+
+Never silently overwrite existing records during restore.
+
+Show a clear preview and require confirmation before replacing or merging local data.
+
+# 22. SECURITY
+
+Implement security-conscious defaults:
+
+- Input validation on every financial form.
+- Safe rendering of user-generated text.
+- No secrets embedded in frontend source code.
+- No unnecessary external data transmission.
+- Optional application lock.
+- Encrypted backup.
+- Secure password-based key derivation.
+- Automatic lock configuration.
+- Safe file import.
+- Clear data deletion controls.
+- Dependency auditing guidance.
+- No fake claims of biometric authentication or encryption.
+- No collection of banking passwords, OTPs, or card PINs.
+
+Document the limitations of local browser storage and the security implications of a shared physical device.
+
+# 23. DATABASE SCHEMA
+
+Create typed database models and migrations for at least:
+
+- settings
+- currencies
+- accounts
+- people
+- categories
+- transactions
+- journalEntries
+- journalLines
+- loans
+- loanRepayments
+- groups
+- groupMembers
+- groupExpenses
+- expenseSplits
+- groupSettlements
+- budgets
+- savingsGoals
+- recurringRules
+- reminders
+- attachments
+- auditEvents
+- exchangeRates
+- importJobs
+
+Use stable IDs, timestamps, indexes, foreign-key-like validation, and referential integrity checks.
+
+Use database transactions for multi-record changes.
+
+Preserve posted financial history when records are archived or corrected.
+
+Do not duplicate the same authoritative financial fact across unrelated tables without a defined reconciliation strategy.
+
+# 24. SUGGESTED PROJECT STRUCTURE
+
+Create a maintainable structure similar to:
+
+src/
+  app/
+    App.tsx
+    router.tsx
+    providers.tsx
+  components/
+    ui/
+    layout/
+    charts/
+    forms/
+    transactions/
+    people/
+    groups/
+  pages/
+    DashboardPage.tsx
+    TransactionsPage.tsx
+    PeoplePage.tsx
+    LendingPage.tsx
+    GroupsPage.tsx
+    AccountsPage.tsx
+    BudgetsPage.tsx
+    ReportsPage.tsx
+    CalendarPage.tsx
+    SettingsPage.tsx
+  features/
+    accounting/
+    transactions/
+    lending/
+    group-expenses/
+    settlements/
+    budgeting/
+    currencies/
+    backups/
+    reminders/
+  db/
+    database.ts
+    schema.ts
+    migrations.ts
+    seed.ts
+  services/
+    exportService.ts
+    importService.ts
+    backupService.ts
+    notificationService.ts
+  hooks/
+  lib/
+    money.ts
+    dates.ts
+    validation.ts
+  types/
+  tests/
+    accounting.test.ts
+    lending.test.ts
+    settlements.test.ts
+    currencies.test.ts
+    transactions.test.ts
+  main.tsx
+
+public/
+  icons/
+  manifest.webmanifest
+
+Include all necessary configuration files, including package.json, tsconfig.json, Vite configuration, Tailwind configuration if required by the selected version, and PWA configuration.
+
+You may adjust the structure if a better modular design is justified.
+
+# 25. TESTING REQUIREMENTS
+
+Write real unit tests for the financial engine.
+
+At minimum, test these scenarios:
+
+1. Receiving salary increases cash and income correctly.
+2. Recording an expense decreases cash and increases expense totals.
+3. Lending money decreases cash and increases receivables.
+4. Borrowing money increases cash and liabilities, not income.
+5. Partial repayment updates the correct loan balance.
+6. Full repayment closes the loan.
+7. Account transfers do not affect income or expense totals.
+8. Credit card payments do not double-count expenses.
+9. Equal group splits produce exact allocations.
+10. Custom splits reject invalid totals.
+11. Percentage splits sum correctly.
+12. Settlement optimization balances all group members.
+13. Recording a settlement updates balances exactly once.
+14. Multi-currency amounts are not combined incorrectly.
+15. Rounding remainders are distributed deterministically.
+16. Invalid or duplicate transactions are rejected.
+17. Reversing a transaction restores the appropriate balances.
+18. All posted journal entries balance.
+19. Database errors roll back related changes.
+20. Backup and restore preserve transaction and ledger integrity.
+21. Recurring rules do not create duplicate transactions.
+22. Archived people and groups retain their financial history.
+
+Use property-based or randomized testing for accounting invariants where practical.
+
+# 26. IMPLEMENTATION INSTRUCTIONS
+
+Follow these steps in order:
+
+STEP 1:
+Inspect the project environment and determine which files already exist.
+
+STEP 2:
+Set up the application structure and install compatible dependencies.
+
+STEP 3:
+Implement the money utilities, currency precision, database schema, migrations, and accounting engine.
+
+STEP 4:
+Implement and test lending, borrowing, repayments, personal expenses, and account transfers.
+
+STEP 5:
+Implement group expenses, custom split methods, group balances, and settlement optimization.
+
+STEP 6:
+Build the responsive design system, navigation, dashboard, and transaction forms.
+
+STEP 7:
+Connect every UI screen to real persisted data.
+
+STEP 8:
+Implement budgets, recurring transactions, reminders, analytics, and reporting.
+
+STEP 9:
+Implement PWA installation, offline support, backups, security controls, and import/export.
+
+STEP 10:
+Run TypeScript checks, tests, and the production build. Fix errors before finishing.
+
+Do not create empty placeholder pages for required features.
+
+Do not use mock data as the application's primary data source. Seed sample data only through an optional demo mode that can be disabled and cleared.
+
+Do not display hardcoded financial totals. Calculate them from persisted records.
+
+Do not leave buttons that do nothing.
+
+If a capability cannot be fully implemented in the current environment, state the limitation explicitly and provide the best functional local alternative.
+
+# 27. FINAL ACCEPTANCE CRITERIA
+
+The application is considered complete only when:
+
+- It installs as a PWA on supported devices.
+- It works offline after the initial load.
+- Transactions persist after restarting the app.
+- People and individual ledgers work correctly.
+- Lending, borrowing, and partial repayments work.
+- Income and expenses are calculated correctly.
+- Multiple accounts and transfers work.
+- Group expense splitting works for all supported methods.
+- Settlement suggestions reconcile to zero net balances.
+- Financial records use a consistent accounting model.
+- Reports reflect persisted data.
+- Backup and restore work.
+- Currency precision is handled correctly.
+- Financial invariants have automated tests.
+- Responsive layouts work on mobile and desktop.
+- All important actions have validation and error handling.
+- No mandatory cloud account is required.
+- No unfinished placeholder functionality is presented as complete.
+
+Begin by building the actual runnable application. First implement the database and accounting foundation, then connect the UI feature by feature. If the project is too large to finish in one generation, work in coherent stages and preserve the working project state between stages. Always summarize which features are implemented, which tests pass, and which features remain incomplete.
+
+The final result must be a usable personal finance and group expense application, not merely a visual prototype.
